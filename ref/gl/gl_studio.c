@@ -2889,6 +2889,7 @@ static void R_StudioSetupRenderer( int rendermode )
 	{
 		pglEnable( GL_DEPTH_TEST );
 		pglDepthRange( 0.0, 1.0 );
+	}
 }
 
 /*
