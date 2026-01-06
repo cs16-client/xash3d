@@ -897,26 +897,25 @@ static void GL_SetupAttributes( void )
 
 void GL_SwapBuffers(void)
 {
-    gl.SetupOrtho();
+    GL_SetupOrtho(&gl);
 
-    // Example: draw ESP boxes for enemies
-    for (auto &ent : ent3DPositions)
+    // Example: draw ESP
+    for (int i=0; i<numEnemies; i++)
     {
         vec2 head2D, feet2D;
-        if (gl.WorldToScreen(ent.first, head2D, viewMatrix, gl.viewport[2], gl.viewport[3]) &&
-            gl.WorldToScreen(ent.second, feet2D, viewMatrix, gl.viewport[2], gl.viewport[3]))
+        if (GL_WorldToScreen(enemyHead[i], &head2D, viewMatrix, gl.viewport[2], gl.viewport[3]) &&
+            GL_WorldToScreen(enemyFeet[i], &feet2D, viewMatrix, gl.viewport[2], gl.viewport[3]))
         {
-            gl.DrawESPBox(head2D, feet2D, 1.5f, gl.red);
+            GL_DrawESPBox(head2D, feet2D, 1.5f, gl.red);
         }
     }
-    ent3DPositions.clear();
 
-    // Crosshair example
-    vec2 l1p1, l1p2, l2p1, l2p2;
-    // calculate your crosshair coords here
-    gl.DrawCrosshair(l1p1, l1p2, l2p1, l2p2, 1.5f, gl.green);
+    // Example: draw crosshair
+    vec2 l1p1={...}, l1p2={...}, l2p1={...}, l2p2={...};
+    GL_DrawCrosshair(l1p1, l1p2, l2p1, l2p2, 1.5f, gl.green);
 
-    gl.Restore();
+    GL_Restore(&gl);
+
     SDL_GL_SwapWindow(host.hWnd);
 }
 
