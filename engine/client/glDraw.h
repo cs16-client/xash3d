@@ -1,39 +1,31 @@
 #pragma once
 #include <GL/gl.h>
-#include <cmath>
-#include <vector>
+#include <math.h>
 
-// minimal vector structs
-struct vec2 { float x, y; };
-struct vec3 { float x, y, z; };
-struct vec4 { float x, y, z, w; };
+// -------------------- vector types --------------------
+typedef struct { float x, y; } vec2;
+typedef struct { float x, y, z; } vec3;
 
-// simple enemy position container
-struct EnemyBox {
-    vec3 head;
-    vec3 feet;
-};
-
-class GL
-{
-public:
+// -------------------- GL overlay struct --------------------
+typedef struct {
     GLint viewport[4];
+    GLubyte red[3];
+    GLubyte green[3];
+    GLubyte blue[3];
+} GL_t;
 
-    // colors
-    const GLubyte red[3]   = {255, 0, 0};
-    const GLubyte green[3] = {0, 255, 0};
-    const GLubyte blue[3]  = {0, 0, 255};
+// -------------------- init --------------------
+void GL_Init(GL_t* gl);
 
-    // 2D overlay setup
-    void SetupOrtho();
-    void Restore();
+// -------------------- 2D overlay setup --------------------
+void GL_SetupOrtho(GL_t* gl);
+void GL_Restore(GL_t* gl);
 
-    // drawing functions
-    void DrawFilledRect(float x, float y, float width, float height, const GLubyte color[3]);
-    void DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3]);
-    void DrawCrosshair(vec2& l1p1, vec2& l1p2, vec2& l2p1, vec2& l2p2, float lineWidth, const GLubyte color[3]);
-    void DrawESPBox(vec2 head, vec2 feet, float lineWidth, const GLubyte color[3]);
+// -------------------- drawing --------------------
+void GL_DrawFilledRect(float x, float y, float width, float height, GLubyte color[3]);
+void GL_DrawOutline(float x, float y, float width, float height, float lineWidth, GLubyte color[3]);
+void GL_DrawCrosshair(vec2 l1p1, vec2 l1p2, vec2 l2p1, vec2 l2p2, float lineWidth, GLubyte color[3]);
+void GL_DrawESPBox(vec2 head, vec2 feet, float lineWidth, GLubyte color[3]);
 
-    // 3D -> 2D projection
-    bool WorldToScreen(vec3 pos, vec2& screen, float matrix[16], int windowWidth, int windowHeight);
-};
+// -------------------- 3D -> 2D projection --------------------
+int GL_WorldToScreen(vec3 pos, vec2* screen, float matrix[16], int windowWidth, int windowHeight);
