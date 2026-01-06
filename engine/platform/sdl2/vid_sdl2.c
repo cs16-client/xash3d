@@ -18,6 +18,8 @@ GNU General Public License for more details.
 #include "client.h"
 #include "vid_common.h"
 #include "platform_sdl2.h"
+#include "glDraw.h"
+GL gl; // global instance
 
 // include it after because it breaks definitions in net_api.h wtf
 #include <SDL_syswm.h>
@@ -893,9 +895,29 @@ static void GL_SetupAttributes( void )
 	ref.dllFuncs.GL_SetupAttributes( glw_state.safe );
 }
 
-void GL_SwapBuffers( void )
+void GL_SwapBuffers(void)
 {
-	SDL_GL_SwapWindow( host.hWnd );
+    gl.SetupOrtho();
+
+    // Example: draw ESP boxes for enemies
+    for (auto &ent : ent3DPositions)
+    {
+        vec2 head2D, feet2D;
+        if (gl.WorldToScreen(ent.first, head2D, viewMatrix, gl.viewport[2], gl.viewport[3]) &&
+            gl.WorldToScreen(ent.second, feet2D, viewMatrix, gl.viewport[2], gl.viewport[3]))
+        {
+            gl.DrawESPBox(head2D, feet2D, 1.5f, gl.red);
+        }
+    }
+    ent3DPositions.clear();
+
+    // Crosshair example
+    vec2 l1p1, l1p2, l2p1, l2p2;
+    // calculate your crosshair coords here
+    gl.DrawCrosshair(l1p1, l1p2, l2p1, l2p2, 1.5f, gl.green);
+
+    gl.Restore();
+    SDL_GL_SwapWindow(host.hWnd);
 }
 
 int GL_SetAttribute( int attr, int val )
